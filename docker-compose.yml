@@ -1,0 +1,51 @@
+version: "3"
+services:
+
+  links_api:
+    command: /bin/sh -c "go run cmd/api/init.go && go run cmd/api/main.go"
+    container_name: links_api
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./:/app
+    depends_on:
+      - links_postgres
+    networks:
+      - app-network
+    env_file:
+      - /.env
+
+
+  links_postgres:
+    container_name: links_postgres
+    hostname: postgres
+    env_file:
+      - /.env
+    image: postgres:14-alpine
+    restart: unless-stopped
+#    environment:
+#      #POSTGRES_USER: ivan
+#      #POSTGRES_PASSWORD: 12
+#      POSTGRES_DB: links
+    volumes:
+      - links_postgres:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/migration.sql
+    ports:
+      - "5407:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+  # sender-network:
+  #   external:
+  #     name: sender_app-network
+
+volumes:
+  links_postgres:
+    driver: local

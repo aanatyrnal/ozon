@@ -1,0 +1,20 @@
+server:
+  AppVersion: 1.0.0
+  Port: :5001
+  PprofPort: :5555
+  Mode: Development
+  ReadTimeout: 5
+  WriteTimeout: 5
+  SSL: true
+  CtxDefaultTimeout: 12
+  CSRF: true
+  Debug: false
+  
+postgres:
+  PostgresqlHost: 0.0.0.0 
+  PostgresqlPort: ${POSTGRES_PORT}
+  PostgresqlUser: ${POSTGRES_USER}
+  PostgresqlPassword: ${POSTGRES_PASSWORD}
+  PostgresqlDbname: links
+  PostgresqlSslmode: false
+  PgDriver: pgx
